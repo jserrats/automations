@@ -1,5 +1,5 @@
-import { ZigbeeComponent } from "."
-import { ZigbeeComponentInfo } from "./types"
+import { ZigbeeComponent, ZigbeeComponentInfo } from "."
+
 
 class Power extends ZigbeeComponent {
     set_topic = this.topic + "/set"
@@ -28,6 +28,6 @@ class Power extends ZigbeeComponent {
     }
 }
 
-export class E1603 extends Power {
+export class PowerE1603 extends Power {
 
 }

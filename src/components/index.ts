@@ -4,7 +4,6 @@ import { ESPHOME_TOPIC } from "../topics"
 import { client } from "../mqtt";
 import { MqttClient } from "mqtt/*";
 import { Automation } from "../types";
-import { ZigbeeComponentInfo } from "./types"
 import { router } from "../router"
 
 export class Component {
@@ -42,3 +41,8 @@ export class ZigbeeComponent extends Component {
     }
 }
 
+
+export type ZigbeeComponentInfo = {
+    linkquality: number,
+    state?: string,
+}

@@ -6,7 +6,7 @@ export class Remote extends ZigbeeComponent {
 
 }
 
-export class E2002 extends Remote {
+export class RemoteE2002 extends Remote {
     // 4 button IKEA powered by 2xAAA
 
     up: Trigger = { topic: this.action_topic, payload: "on" }
@@ -16,7 +16,7 @@ export class E2002 extends Remote {
 
 }
 
-export class E1812 extends Remote {
+export class RemoteE1812 extends Remote {
     // 1 button IKEA remote powered by CR2032
     
     click: Trigger = { topic: this.action_topic, payload: "on" }
