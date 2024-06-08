@@ -22,7 +22,6 @@ class Power extends ZigbeeComponent {
     }
 
     updateComponent(message: ZigbeeComponentInfo): void {
-        //console.log(message)
         this.state = (message.state == "ON")
         super.updateComponent(message)
     }

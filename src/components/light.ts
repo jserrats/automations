@@ -27,7 +27,6 @@ export class Light extends ZigbeeComponent {
         this.state = (message.state == "ON")
         this.brightness = message.brightness
         this.color_temp = message.color_temp
-        console.log("updating", this.state, this.brightness)
         super.updateComponent(message)
     }
 }

@@ -14,10 +14,6 @@ let workshop_remote = new RemoteE1812("workshop_remote")
 let laundry_sensor = new PresenceSensor("presence0")
 let laundry_light = new Light("light0")
 
-laundry_light.toggle()
-
-setTimeout(() => { console.log(laundry_light.state); laundry_light.toggle(), 4000 })
-
 // Living Room
 router.addAutomation({ trigger: livingroom_remote.up, callback: () => { livingroom_smooth_lights.toggle() } })
 
