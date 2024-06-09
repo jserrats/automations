@@ -1,4 +1,4 @@
-import { ZigbeeComponent, ZigbeeComponentInfo } from "./zigbee"
+import { ZigbeeComponent, InboundZigbeeInfo } from "./zigbee"
 import { Trigger } from "../../types"
 
 export class PresenceSensorZigbee extends ZigbeeComponent {
@@ -19,6 +19,6 @@ export class PresenceSensorZigbee extends ZigbeeComponent {
 
 }
 
-interface PresenceSensorZigbeeComponentInfo extends ZigbeeComponentInfo {
+type PresenceSensorZigbeeComponentInfo = {
     occupancy: boolean
-}
+} & InboundZigbeeInfo
