@@ -1,11 +1,17 @@
-import { ZigbeeComponent, ZigbeeComponentInfo } from "."
+import { ZigbeeComponent, ZigbeeComponentInfo } from "./zigbee"
 
 
-export class Light extends ZigbeeComponent {
+export class LightZigbee extends ZigbeeComponent {
     set_topic = this.topic + "/set"
     state: boolean = false
     brightness: number = 0
     color_temp?: number
+
+    setBrightness(level: number) {
+        if (level > 0 && level < 255) {
+            this.brightness = level
+        }
+    }
 
     on() {
         this.set(true)
@@ -20,7 +26,7 @@ export class Light extends ZigbeeComponent {
     }
 
     private set(order: boolean) {
-        this.client.publish(this.set_topic, JSON.stringify({ state: order ? "ON" : "OFF" }))
+        this.client.publish(this.set_topic, JSON.stringify({ state: order ? "ON" : "OFF", brightness: this.brightness }))
     }
 
     updateComponent(message: LightZigbeeComponentInfo): void {

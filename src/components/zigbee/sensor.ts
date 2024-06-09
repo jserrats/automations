@@ -1,7 +1,7 @@
-import { ZigbeeComponent, ZigbeeComponentInfo } from "./index"
-import { Trigger } from "../types"
+import { ZigbeeComponent, ZigbeeComponentInfo } from "./zigbee"
+import { Trigger } from "../../types"
 
-export class PresenceSensor extends ZigbeeComponent {
+export class PresenceSensorZigbee extends ZigbeeComponent {
     occupancy = false
     action_topic = this.topic + "/action"
     occupancyTriggered: Trigger = { topic: this.action_topic, payload: "ON" }

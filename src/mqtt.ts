@@ -21,6 +21,7 @@ client.on("connect", () => {
             client.publish(topic.STATUS_TOPIC, "online");
         }
     });
+    client.subscribe(topic.ESPHOME_TOPIC + "#")
 });
 
 

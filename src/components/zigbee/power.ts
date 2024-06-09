@@ -1,7 +1,7 @@
-import { ZigbeeComponent, ZigbeeComponentInfo } from "."
+import { ZigbeeComponent, ZigbeeComponentInfo } from "./zigbee"
 
 
-class Power extends ZigbeeComponent {
+class PowerZigbee extends ZigbeeComponent {
     set_topic = this.topic + "/set"
     state: boolean = false
 
@@ -13,9 +13,9 @@ class Power extends ZigbeeComponent {
         this.set(false)
     }
 
-    toggle(){
+    toggle() {
         this.set(!this.state)
-    }   
+    }
 
     private set(order: boolean) {
         this.client.publish(this.set_topic, order ? "ON" : "OFF")
@@ -27,6 +27,6 @@ class Power extends ZigbeeComponent {
     }
 }
 
-export class PowerE1603 extends Power {
+export class PowerE1603 extends PowerZigbee {
 
 }
