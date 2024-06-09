@@ -119,6 +119,26 @@ router.addAutomation({
     }
 })
 
+router.addAutomation({
+    trigger: [
+        bedroomRemoteRight.bottomRightHold,
+    ],
+    callback: () => {
+        bedroomLightLeft.off()
+        bedroomLightRight.on(warmLight)
+    }
+})
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.bottomRightHold,
+    ],
+    callback: () => {
+        bedroomLightRight.off()
+        bedroomLightLeft.on(warmLight)
+    }
+})
+
 // mosquito
 
 var mosquitoRepellant = new zigbee.PowerE1603("power3")
