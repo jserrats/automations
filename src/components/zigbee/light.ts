@@ -2,18 +2,25 @@ import { ZigbeeComponent, ZigbeeComponentInfo } from "./zigbee"
 
 
 export class LightZigbee extends ZigbeeComponent {
-    set_topic = this.topic + "/set"
+    setTopic = this.topic + "/set"
     state: boolean = false
-    brightness: number = 0
-    color_temp?: number
+    private brightness: number = 254
+    private colorTemp?: number
 
     setBrightness(level: number) {
         if (level > 0 && level < 255) {
             this.brightness = level
         }
+        // apply new brightness only if the light is already on
+        if (this.state) {
+            this.set(true)
+        }
     }
 
-    on() {
+    on(brightness?: number) {
+        if (typeof brightness !== 'undefined') {
+            this.setBrightness(brightness)
+        }
         this.set(true)
     }
 
@@ -26,13 +33,13 @@ export class LightZigbee extends ZigbeeComponent {
     }
 
     private set(order: boolean) {
-        this.client.publish(this.set_topic, JSON.stringify({ state: order ? "ON" : "OFF", brightness: this.brightness }))
+        this.client.publish(this.setTopic, JSON.stringify({ state: order ? "ON" : "OFF", brightness: this.brightness }))
     }
 
     updateComponent(message: LightZigbeeComponentInfo): void {
         this.state = (message.state == "ON")
         this.brightness = message.brightness
-        this.color_temp = message.color_temp
+        this.colorTemp = message.color_temp
         super.updateComponent(message)
     }
 }

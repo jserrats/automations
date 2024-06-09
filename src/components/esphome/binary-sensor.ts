@@ -3,7 +3,7 @@ import { router } from "../../router"
 import { Automation, Trigger } from "../../types"
 
 export class BinarySensorESPHome extends ESPHomeComponent {
-    sensor_topic: string
+    sensorTopic: string
     state: boolean = false
     updater: Automation
 
@@ -12,9 +12,9 @@ export class BinarySensorESPHome extends ESPHomeComponent {
 
     constructor(name: string, component: string) {
         super(name)
-        this.sensor_topic = this.topic + "/binary_sensor/" + component + "/state"
-        this.turnedOff.topic = this.sensor_topic
-        this.turnedOn.topic = this.sensor_topic
+        this.sensorTopic = this.topic + "/binary_sensor/" + component + "/state"
+        this.turnedOff.topic = this.sensorTopic
+        this.turnedOn.topic = this.sensorTopic
         this.updater = {
             trigger: { topic: this.topic, payload: "*" }, callback: (message: string) => {
                 this.updateComponent(message)

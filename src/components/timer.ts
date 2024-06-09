@@ -1,15 +1,22 @@
-export class Timer {
+import { Trigger } from "../types"
+import { Component } from "./component"
+import { router } from "../router"
+
+export class Timer extends Component {
     timeoutID: number = 0
     period: number = 0
 
     constructor(period?: Period) {
-        if (typeof period !== 'undefined') {
-            this.setPeriod(period)
-        }
+        super()
+        this.setPeriod(period)
     }
 
-    setTimeout(callback: CallableFunction, period?: Period) {
+    setTimeout(callback: CallableFunction, options?: Options) {
         this.cancelTimeout()
+        if (typeof options !== 'undefined') {
+            this.setPeriod(options.period)
+            this.setCancelTrigger(options.cancelTrigger)
+        }
         this.timeoutID = setTimeout(callback, this.period)
     }
 
@@ -17,15 +24,23 @@ export class Timer {
         clearTimeout(this.timeoutID)
     }
 
-    private setPeriod(timer: Period) {
-        let seconds: number = 0;
-        if (typeof timer.seconds !== 'undefined') {
-            seconds = timer.seconds
+    private setPeriod(period?: Period) {
+        if (typeof period !== 'undefined') {
+            let seconds: number = 0;
+            if (typeof period.seconds !== 'undefined') {
+                seconds = period.seconds
+            }
+            if (typeof period.minutes !== 'undefined') {
+                seconds = period.minutes * 60 + seconds
+            }
+            this.period = seconds * 1000
         }
-        if (typeof timer.minutes !== 'undefined') {
-            seconds = timer.minutes * 60 + seconds
+    }
+
+    private setCancelTrigger(trigger?: Trigger) {
+        if (typeof trigger !== 'undefined') {
+            router.addAutomation({ trigger: trigger, callback: () => { this.cancelTimeout(); } })
         }
-        this.period = seconds * 1000
     }
 
 }
@@ -33,4 +48,9 @@ export class Timer {
 type Period = {
     seconds?: number,
     minutes?: number
+}
+
+type Options = {
+    period?: Period,
+    cancelTrigger?: Trigger
 }
