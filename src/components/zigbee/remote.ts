@@ -5,10 +5,11 @@ export class RemoteZigbee extends ZigbeeComponent {
     actionTopic = this.topic + "/action"
 
 }
-
+/**
+ * STYRBAR remote control
+ * 4 button IKEA powered by 2xAAA
+ */
 export class RemoteE2002 extends RemoteZigbee {
-    // 4 button IKEA powered by 2xAAA
-
     up: Trigger = { topic: this.actionTopic, payload: "on" }
     down: Trigger = { topic: this.actionTopic, payload: "off" }
     left: Trigger = { topic: this.actionTopic, payload: "arrow_left_click" }
@@ -16,14 +17,18 @@ export class RemoteE2002 extends RemoteZigbee {
 
 }
 
+/**
+ * TRADFRI shortcut button
+ * 1 button IKEA remote powered by CR2032
+ */
 export class RemoteE1812 extends RemoteZigbee {
-    // 1 button IKEA remote powered by CR2032
-
     click: Trigger = { topic: this.actionTopic, payload: "on" }
 }
 
+/**
+ * Wireless switch with 4 buttons 
+ */
 export class RemoteTS0044 extends RemoteZigbee {
-    // 4 button remote
     // 1 | 2
     //-------
     // 3 | 4

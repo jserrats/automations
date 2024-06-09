@@ -50,6 +50,9 @@ export class LightZigbee extends ZigbeeComponent {
     }
 }
 
+/**
+ * TRADFRI bulb E26/27, white spectrum, globe, opal, 1055/1100/1160 lm
+ */
 export class LightLED1623G12 extends LightZigbee {
     protected colorTemp: number = 250
 

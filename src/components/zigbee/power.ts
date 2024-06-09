@@ -27,6 +27,9 @@ class PowerZigbee extends ZigbeeComponent {
     }
 }
 
+/**
+ * TRADFRI control outlet
+ */
 export class PowerE1603 extends PowerZigbee {
 
 }
