@@ -16,16 +16,12 @@ export class LightZigbee extends ZigbeeComponent {
         }
     }
 
-    on() {
-        this.set(true)
-    }
-
-    /**Turns on the light. @param brightness (0-254) */
-    onWithOptions({ brightness }: LightOptions) {
-        if (typeof brightness !== 'undefined') {
-            this.setBrightness(brightness)
+    on(options?: LightOptions) {
+        if (typeof options?.brightness !== 'undefined') {
+            this.setBrightness(options.brightness)
         }
         this.on()
+        this.set(true)
     }
 
     off() {
@@ -74,11 +70,13 @@ export class LightLED1623G12 extends LightZigbee {
      * @param brightness (0-254)
      * @param colorTemp (250-454)
      */
-    onWithOptions({ brightness, colorTemp }: TemperatureLightOptions) {
-        if (typeof colorTemp !== 'undefined') {
-            this.setColorTemp(colorTemp)
+    on(options?: TemperatureLightOptions) {
+        if (typeof options?.colorTemp !== 'undefined') {
+            this.setColorTemp(options.colorTemp)
         }
-        super.onWithOptions({ brightness })
+        const brightness: number | undefined = options?.brightness
+
+        super.on({ brightness })
     }
 
     protected getOptions() {

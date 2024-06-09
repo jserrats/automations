@@ -32,7 +32,7 @@ router.addAutomation({
     trigger: studioPresence.turnedOn, callback: () => {
         studioLight.on()
         deskPower.on()
-        shelvesLight.onWithOptions({ brightness: 180 })
+        shelvesLight.on({ brightness: 180 })
     }
 })
 router.addAutomation({
