@@ -1,9 +1,7 @@
 
 import { router } from "./router";
-import { RemoteE2002, RemoteE1812 } from "./components/remote"
-import { PowerE1603 } from "./components/power"
-import { PresenceSensor } from "./components/sensor"
-import { Light } from "./components/light"
+
+import { Light, Timer, PresenceSensor, RemoteE1812, RemoteE2002, PowerE1603 } from "./components"
 
 console.log("[i] Starting Automations")
 

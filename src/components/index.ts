@@ -6,6 +6,12 @@ import { MqttClient } from "mqtt/*";
 import { Automation } from "../types";
 import { router } from "../router"
 
+export { Light } from "./light"
+export { Timer } from "./timer"
+export { PresenceSensor } from "./sensor"
+export { RemoteE2002, RemoteE1812 } from "./remote"
+export { PowerE1603 } from "./power"
+
 export class Component {
     client: MqttClient
 
