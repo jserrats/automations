@@ -20,7 +20,6 @@ export class LightZigbee extends ZigbeeComponent {
         if (typeof options?.brightness !== 'undefined') {
             this.setBrightness(options.brightness)
         }
-        this.on()
         this.set(true)
     }
 
