@@ -49,3 +49,95 @@ router.addAutomation({
         }, { cancelTrigger: studioPresence.turnedOn })
     }
 })
+
+// Bedroom
+var bedroomRemoteLeft = new zigbee.RemoteTS0044("button4.4")
+var bedroomRemoteRight = new zigbee.RemoteTS0044("button4.2")
+
+var bedroomFan = new zigbee.PowerE1603("power2")
+var bedroomFanTimer = new Timer({ minutes: 30 })
+
+// fan control
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.bottomLeftSingleClick,
+        bedroomRemoteRight.bottomLeftSingleClick
+    ], callback: () => { bedroomFan.toggle() }
+})
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.bottomLeftDoubleClick,
+        bedroomRemoteRight.bottomLeftDoubleClick
+    ], callback: () => {
+        bedroomFan.on()
+        bedroomFanTimer.setTimeout(() => {
+            bedroomFan.off()
+        }, {
+            cancelTrigger: [
+                bedroomRemoteLeft.bottomLeftHold,
+                bedroomRemoteRight.bottomLeftHold
+            ]
+        })
+    }
+})
+
+// lights
+
+const dayLight = { brightness: 254, colorTemp: 250 }
+const warmLight = { brightness: 5, colorTemp: 450 }
+
+var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_light")
+var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_light2")
+var bedroomRemoteEntrance = new zigbee.RemoteE1812("button1.1")
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.bottomRightSingleClick,
+        bedroomRemoteRight.bottomRightSingleClick,
+        bedroomRemoteEntrance.click
+    ],
+    callback: () => {
+        if (bedroomLightLeft.state && bedroomLightRight.state) {
+            bedroomLightLeft.off(),
+                bedroomLightRight.off()
+        } else {
+            bedroomLightLeft.on(dayLight),
+                bedroomLightRight.on(dayLight)
+        }
+    }
+})
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.bottomRightDoubleClick,
+        bedroomRemoteRight.bottomRightDoubleClick,
+    ],
+    callback: () => {
+        bedroomLightLeft.on(warmLight),
+            bedroomLightRight.on(warmLight)
+    }
+})
+
+// mosquito
+
+var mosquitoRepellant = new zigbee.PowerE1603("power3")
+var mosquitoTimer = new Timer({ hours: 8 }, () => { mosquitoRepellant.off() })
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.topRightSingleClick,
+        bedroomRemoteRight.topRightSingleClick,
+    ],
+    callback: () => {
+        mosquitoRepellant.on()
+        mosquitoTimer.setTimeout(() => {
+            mosquitoRepellant.off()
+        }, {
+            cancelTrigger: [
+                bedroomRemoteLeft.topRightHold,
+                bedroomRemoteRight.topRightHold
+            ]
+        })
+    }
+})
