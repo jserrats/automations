@@ -1,4 +1,4 @@
-import { ZigbeeComponent, ZigbeeComponentInfo } from "./zigbee"
+import { ZigbeeComponent, InboundZigbeeInfo } from "./zigbee"
 
 
 class PowerZigbee extends ZigbeeComponent {
@@ -21,7 +21,7 @@ class PowerZigbee extends ZigbeeComponent {
         this.client.publish(this.set_topic, order ? "ON" : "OFF")
     }
 
-    updateComponent(message: ZigbeeComponentInfo): void {
+    updateComponent(message: InboundPowerZigbeeInfo): void {
         this.state = (message.state == "ON")
         super.updateComponent(message)
     }
@@ -30,3 +30,7 @@ class PowerZigbee extends ZigbeeComponent {
 export class PowerE1603 extends PowerZigbee {
 
 }
+
+type InboundPowerZigbeeInfo = {
+    state: string,
+} & InboundZigbeeInfo

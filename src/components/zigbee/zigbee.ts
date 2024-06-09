@@ -16,13 +16,12 @@ export class ZigbeeComponent extends Component {
         router.addAutomation(this.updater)
     }
 
-    updateComponent(message: ZigbeeComponentInfo) {
+    updateComponent(message: InboundZigbeeInfo) {
         this.linkquality = message["linkquality"]
     }
 }
 
 
-export type ZigbeeComponentInfo = {
+export type InboundZigbeeInfo = {
     linkquality: number,
-    state?: string,
 }
