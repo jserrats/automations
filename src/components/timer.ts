@@ -33,6 +33,9 @@ export class Timer extends Component {
             if (typeof period.minutes !== 'undefined') {
                 seconds = period.minutes * 60 + seconds
             }
+            if (typeof period.hours !== 'undefined') {
+                seconds = period.hours * 3600 + seconds
+            }
             this.period = seconds * 1000
         }
     }
@@ -48,6 +51,7 @@ export class Timer extends Component {
 type Period = {
     seconds?: number,
     minutes?: number
+    hours?: number
 }
 
 type Options = {
