@@ -23,6 +23,7 @@ router.addAutomation({ trigger: laundrySensor.occupancyCleared, callback: () => 
 // Studio
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
 var studioLight = new zigbee.LightLED1623G12("studio_light")
+var studioLight = new zigbee.LightLED1623G12("studio_light")
 var deskPower = new zigbee.PowerE1603("power1")
 var deskTimer = new Timer({ minutes: 5 })
 var shelvesLight = new zigbee.LightZigbee("light3")
@@ -32,7 +33,7 @@ router.addAutomation({
     trigger: studioPresence.turnedOn, callback: () => {
         studioLight.on()
         deskPower.on()
-        shelvesLight.on({ brightness: 180 })
+        shelvesLight.on({ brightness: { brightness: 180 } })
     }
 })
 router.addAutomation({

@@ -23,13 +23,19 @@ class Router {
 
     route(newTopic: string, newPayload: string) {
         this.routes.forEach((automation: Automation) => {
-            if (automation.trigger.topic == newTopic && wcmatch(automation.trigger.payload)(newPayload)) {
-                automation.callback(newPayload)
+            if (wcmatch(automation.trigger.topic)(newTopic) && wcmatch(automation.trigger.payload)(newPayload)) {
+                automation.callback({
+                    topic: newTopic,
+                    payload: newPayload
+                })
             }
         });
 
     }
 }
 
-
+export type CallbackMessage = {
+    topic: string,
+    payload: string
+}
 export let router = new Router();
