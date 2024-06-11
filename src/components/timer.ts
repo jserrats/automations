@@ -3,14 +3,18 @@ import { Component } from "./component"
 import { router } from "../router"
 
 export class Timer extends Component {
-    timeoutID: number = 0
-    period: number = 0
-    cancelCallback: CallableFunction = () => { }
+    private timeoutID: NodeJS.Timeout = setTimeout(() => { })
+    private intervalID: NodeJS.Timeout = setInterval(() => { })
+    private length: number = 0
+    private seconds: number = 0
+    private cancelCallback: CallableFunction = () => { }
+    private publishTopic: string = ""
 
-    constructor(period?: Period, cancelCallback?: CallableFunction) {
+
+    constructor(length?: Length, cancelCallback?: CallableFunction) {
         super()
-        if (typeof period !== 'undefined') {
-            this.setPeriod(period)
+        if (typeof length !== 'undefined') {
+            this.setLength(length)
         }
         if (typeof cancelCallback !== 'undefined') {
             this.cancelCallback = cancelCallback
@@ -21,20 +25,46 @@ export class Timer extends Component {
         this.cancelTimeout()
         if (typeof options !== 'undefined') {
             if (typeof options.period !== 'undefined') {
-                this.setPeriod(options.period)
+                this.setLength(options.period)
             }
             if (typeof options.cancelTrigger !== 'undefined') {
                 this.setCancelTrigger(options.cancelTrigger)
             }
+            if (typeof options.publishTopic !== 'undefined') {
+                this.publishTopic = options.publishTopic
+                this.intervalID = setInterval(() => {
+                    this.seconds = this.seconds + 1;
+                    this.publishTime()
+                }, 1000)
+            }
         }
-        this.timeoutID = setTimeout(callback, this.period)
+        this.timeoutID = setTimeout(() => { clearInterval(this.intervalID); callback() }, this.length)
     }
 
-    cancelTimeout() {
+    private publishTime() {
+        this.client.publish("automations/timer/" + this.publishTopic, this.seconds.toString())
+        this.client.publish("automations/timer/" + this.publishTopic + "/countdown", (this.length / 1000 - this.seconds).toString())
+        this.client.publish("automations/timer/" + this.publishTopic + "/text", Timer.secondsToHms(this.seconds))
+        this.client.publish("automations/timer/" + this.publishTopic + "/text_countdown", Timer.secondsToHms(this.length / 1000 - this.seconds))
+    }
+
+    private static secondsToHms(seconds: number) {
+        seconds = Number(seconds);
+        var h = Math.floor(seconds / 3600);
+        var m = Math.floor(seconds % 3600 / 60);
+        var s = Math.floor(seconds % 3600 % 60);
+
+        var hDisplay = h > 0 ? h + ("h ") : "";
+        var mDisplay = m > 0 ? m + ("m ") : "";
+        var sDisplay = s > 0 ? s + ("s") : "";
+        return hDisplay + mDisplay + sDisplay;
+    }
+
+    private cancelTimeout() {
         clearTimeout(this.timeoutID)
     }
 
-    private setPeriod(period: Period) {
+    private setLength(period: Length) {
         let seconds: number = 0;
         if (typeof period.seconds !== 'undefined') {
             seconds = period.seconds
@@ -45,8 +75,7 @@ export class Timer extends Component {
         if (typeof period.hours !== 'undefined') {
             seconds = period.hours * 3600 + seconds
         }
-        this.period = seconds * 1000
-
+        this.length = seconds * 1000
     }
 
     private setCancelTrigger(trigger: Trigger | Trigger[]) {
@@ -63,13 +92,14 @@ export class Timer extends Component {
 
 }
 
-type Period = {
+type Length = {
     seconds?: number,
     minutes?: number
     hours?: number
 }
 
 type Options = {
-    period?: Period,
+    period?: Length,
     cancelTrigger?: Trigger | Trigger[]
+    publishTopic?: string
 }
