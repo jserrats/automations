@@ -23,7 +23,7 @@ export class ZigbeeComponent extends Component {
 
 // Workaround to not flood with retained messages at startup
 var noRetained = false
-setTimeout(() => { noRetained = true; console.log("changing to offline") }, 1000)
+setTimeout(() => { noRetained = true; }, 1000)
 router.addAutomation({
     trigger: { topic: ZIGBEE2MQTT_TOPIC + "/*/availability", payload: "*" },
     callback: (message: CallbackMessage) => {
