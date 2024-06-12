@@ -23,6 +23,7 @@ router.addAutomation({ trigger: laundrySensor.occupancyCleared, callback: () => 
 // Studio
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
 var studioLight = new zigbee.LightLED1623G12("studio_light")
+var studioLight = new zigbee.LightLED1623G12("studio_light")
 var deskPower = new zigbee.PowerE1603("power1")
 var deskTimer = new Timer()
 var shelvesLight = new zigbee.LightZigbee("light3")
@@ -116,6 +117,26 @@ router.addAutomation({
     callback: () => {
         bedroomLightLeft.on(warmLight),
             bedroomLightRight.on(warmLight)
+    }
+})
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteRight.bottomRightHold,
+    ],
+    callback: () => {
+        bedroomLightLeft.off()
+        bedroomLightRight.on(warmLight)
+    }
+})
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.bottomRightHold,
+    ],
+    callback: () => {
+        bedroomLightRight.off()
+        bedroomLightLeft.on(warmLight)
     }
 })
 
