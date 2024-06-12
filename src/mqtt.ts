@@ -11,7 +11,7 @@ if (MQTT_SERVER === undefined) {
 }
 
 export const client = mqtt.connect("mqtt://" + MQTT_SERVER, {
-    will: { topic: topic.STATUS_TOPIC, payload: Buffer.from("offline") }
+    will: { topic: topic.STATUS_TOPIC, payload: Buffer.from("offline"), retain: true }
 });
 
 
