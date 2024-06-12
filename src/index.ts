@@ -24,9 +24,9 @@ router.addAutomation({ trigger: laundrySensor.occupancyCleared, callback: () => 
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
 var studioLight = new zigbee.LightLED1623G12("studio_light")
 var deskPower = new zigbee.PowerE1603("power1")
-var deskTimer = new Timer({ minutes: 5 })
+var deskTimer = new Timer()
 var shelvesLight = new zigbee.LightZigbee("light3")
-var shelvesLightTimer = new Timer({ minutes: 10 })
+var shelvesLightTimer = new Timer()
 
 router.addAutomation({
     trigger: studioPresence.turnedOn, callback: () => {
@@ -39,12 +39,12 @@ router.addAutomation({
     trigger: studioPresence.turnedOff, callback: () => {
         studioLight.off()
 
-        deskTimer.setTimeout(() => {
+        deskTimer.setTimeout({ minutes: 5 }, () => {
             deskPower.off()
             shelvesLight.setBrightness(100)
         }, { cancelTrigger: studioPresence.turnedOn })
 
-        shelvesLightTimer.setTimeout(() => {
+        shelvesLightTimer.setTimeout({ minutes: 10 }, () => {
             shelvesLight.off()
         }, { cancelTrigger: studioPresence.turnedOn })
     }
@@ -55,7 +55,7 @@ var bedroomRemoteLeft = new zigbee.RemoteTS0044("button4.4")
 var bedroomRemoteRight = new zigbee.RemoteTS0044("button4.2")
 
 var bedroomFan = new zigbee.PowerE1603("power2")
-var bedroomFanTimer = new Timer({ minutes: 30 })
+var bedroomFanTimer = new Timer()
 
 // fan control
 router.addAutomation({
@@ -71,7 +71,7 @@ router.addAutomation({
         bedroomRemoteRight.bottomLeftDoubleClick
     ], callback: () => {
         bedroomFan.on()
-        bedroomFanTimer.setTimeout(() => {
+        bedroomFanTimer.setTimeout({ minutes: 30 }, () => {
             bedroomFan.off()
         }, {
             cancelTrigger: [
@@ -122,7 +122,7 @@ router.addAutomation({
 // mosquito
 
 var mosquitoRepellant = new zigbee.PowerE1603("power3")
-var mosquitoTimer = new Timer({ hours: 8 }, () => { mosquitoRepellant.off() })
+var mosquitoTimer = new Timer()
 
 router.addAutomation({
     trigger: [
@@ -131,13 +131,15 @@ router.addAutomation({
     ],
     callback: () => {
         mosquitoRepellant.on()
-        mosquitoTimer.setTimeout(() => {
+        mosquitoTimer.setTimeout({ hours: 8 }, () => {
             mosquitoRepellant.off()
         }, {
             cancelTrigger: [
                 bedroomRemoteLeft.topRightHold,
                 bedroomRemoteRight.topRightHold
-            ]
+            ],
+            cancelCallback: () => { mosquitoRepellant.off() },
+            publishTopic: "mosquito"
         })
     }
 })

@@ -10,23 +10,11 @@ export class Timer extends Component {
     private cancelCallback: CallableFunction = () => { }
     private publishTopic: string = ""
 
-
-    constructor(length?: Length, cancelCallback?: CallableFunction) {
-        super()
-        if (typeof length !== 'undefined') {
-            this.setLength(length)
-        }
-        if (typeof cancelCallback !== 'undefined') {
-            this.cancelCallback = cancelCallback
-        }
-    }
-
-    setTimeout(callback: CallableFunction, options?: Options) {
+    setTimeout(period: Length, callback: CallableFunction, options?: Options) {
         this.cancelTimeout()
+        this.setLength(period)
+        
         if (typeof options !== 'undefined') {
-            if (typeof options.period !== 'undefined') {
-                this.setLength(options.period)
-            }
             if (typeof options.cancelTrigger !== 'undefined') {
                 this.setCancelTrigger(options.cancelTrigger)
             }
@@ -37,7 +25,12 @@ export class Timer extends Component {
                     this.publishTime()
                 }, 1000)
             }
+            if (typeof options.cancelCallback !== 'undefined') {
+                this.cancelCallback = options.cancelCallback
+            }
         }
+
+        
         this.timeoutID = setTimeout(() => { clearInterval(this.intervalID); callback() }, this.length)
     }
 
@@ -60,8 +53,9 @@ export class Timer extends Component {
         return hDisplay + mDisplay + sDisplay;
     }
 
-    private cancelTimeout() {
+    public cancelTimeout() {
         clearTimeout(this.timeoutID)
+        clearInterval(this.intervalID)
     }
 
     private setLength(period: Length) {
@@ -99,7 +93,7 @@ type Length = {
 }
 
 type Options = {
-    period?: Length,
     cancelTrigger?: Trigger | Trigger[]
+    cancelCallback?: CallableFunction
     publishTopic?: string
 }
