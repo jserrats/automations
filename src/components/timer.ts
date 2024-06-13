@@ -13,7 +13,6 @@ export class Timer extends Component {
     setTimeout(period: Length, callback: CallableFunction, options?: Options) {
         this.cancelTimeout()
         this.setLength(period)
-        
         if (typeof options !== 'undefined') {
             if (typeof options.cancelTrigger !== 'undefined') {
                 this.setCancelTrigger(options.cancelTrigger)
@@ -29,8 +28,6 @@ export class Timer extends Component {
                 this.cancelCallback = options.cancelCallback
             }
         }
-
-        
         this.timeoutID = setTimeout(() => { clearInterval(this.intervalID); callback() }, this.length)
     }
 
@@ -55,6 +52,10 @@ export class Timer extends Component {
 
     public cancelTimeout() {
         clearTimeout(this.timeoutID)
+        if (this.publishTopic !== "") {
+            this.seconds = 0
+            this.publishTime()
+        }
         clearInterval(this.intervalID)
     }
 
