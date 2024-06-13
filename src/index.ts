@@ -1,6 +1,6 @@
 
 import { router } from "./router";
-import { zigbee, esphome, Timer, Sun } from "./components"
+import { zigbee, esphome, Timer } from "./components"
 
 console.log("[i] Starting Automations")
 
