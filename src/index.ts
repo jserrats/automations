@@ -1,6 +1,6 @@
 
 import { router } from "./router";
-import { zigbee, esphome, Timer } from "./components"
+import { zigbee, esphome, Timer, Sun } from "./components"
 
 console.log("[i] Starting Automations")
 
@@ -180,3 +180,7 @@ router.addAutomation({
             })
     }
 })
+
+// weather
+
+var sun = new Sun(41.3831173, 2.1640883)
