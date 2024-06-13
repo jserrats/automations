@@ -1,6 +1,6 @@
 
 import { router } from "./router";
-import { zigbee, esphome, Timer } from "./components"
+import { zigbee, esphome, Timer, Sun } from "./components"
 
 console.log("[i] Starting Automations")
 
@@ -162,5 +162,21 @@ router.addAutomation({
             cancelCallback: () => { mosquitoRepellant.off() },
             publishTopic: "mosquito"
         })
+    }
+})
+
+// Kitchen
+var sandwich = new esphome.SwitchESPHome("sandwich", "sandwich")
+var sandwichTimer = new Timer()
+
+router.addAutomation({
+    trigger: sandwich.turnedOn,
+    callback: () => {
+        sandwichTimer.setTimeout({ minutes: 8 },
+            () => { sandwich.off() },
+            {
+                publishTopic: "sandwich",
+                cancelTrigger: sandwich.turnedOff
+            })
     }
 })
