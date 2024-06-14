@@ -1,4 +1,4 @@
-import { Automation, AutomationMultipleTriggers } from "./types"
+import { Automation, AutomationMultipleTriggers, Trigger } from "./types"
 import wcmatch from 'wildcard-match'
 
 
@@ -34,8 +34,4 @@ class Router {
     }
 }
 
-export type CallbackMessage = {
-    topic: string,
-    payload: string
-}
 export let router = new Router();
