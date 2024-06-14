@@ -16,8 +16,8 @@ export class BinarySensorESPHome extends ESPHomeComponent {
         this.turnedOff.topic = this.sensorTopic
         this.turnedOn.topic = this.sensorTopic
         this.updater = {
-            trigger: { topic: this.topic, payload: "*" }, callback: (message: string) => {
-                this.updateComponent(message)
+            trigger: { topic: this.topic, payload: "*" }, callback: (message: Trigger) => {
+                this.updateComponent(message.payload)
             }
         }
         router.addAutomation(this.updater)
