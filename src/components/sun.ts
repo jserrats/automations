@@ -20,7 +20,7 @@ export class Sun extends Component {
             this.notify("sunrise")
             this.updateSunrise(this.nextSunrise)
         })
-        
+
         scheduleJob(this.nextSunset, () => {
             this.notify("sunset")
             this.updateSunset(this.nextSunrise)
@@ -28,15 +28,16 @@ export class Sun extends Component {
     }
 
     private notify(sun: "sunrise" | "sunset") {
-        this.client.publish(BASE_TOPIC + "sun/sunrise", sun)
+        this.client.publish(BASE_TOPIC + "sun/" + sun, "now"
+        )
     }
 
     private updateSunrise(message: Date) {
-        this.client.publish(BASE_TOPIC + "sun/sunrise/time", message.toISOString())
+        this.client.publish(BASE_TOPIC + "sun/sunrise/time", message.toISOString(), { retain: true })
     }
 
     private updateSunset(message: Date) {
-        this.client.publish(BASE_TOPIC + "sun/sunset/time", message.toISOString())
+        this.client.publish(BASE_TOPIC + "sun/sunset/time", message.toISOString(), { retain: true })
     }
 }
 
