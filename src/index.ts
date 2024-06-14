@@ -7,7 +7,21 @@ console.log("[i] Starting Automations")
 // Living Room
 var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
 var livingroomSmoothLights = new zigbee.PowerE1603("power4")
+var clock = new esphome.LightESPHome("minimatrix", "clock")
+var livingRoomClockTimer = new Timer()
 router.addAutomation({ trigger: livingroomRemote.up, callback: () => { livingroomSmoothLights.toggle() } })
+router.addAutomation({
+    trigger: livingroomRemote.down,
+    callback: () => {
+        clock.off(),
+        livingRoomClockTimer.setTimeout({ hours: 8 },
+            () => { clock.on() },
+            {
+                cancelTrigger: livingroomRemote.down,
+                cancelCallback: () => { clock.on() }
+            })
+    }
+})
 
 // Workshop
 var workshopPower = new zigbee.PowerE1603("power6")
