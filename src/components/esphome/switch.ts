@@ -8,15 +8,18 @@ export class SwitchESPHome extends ESPHomeComponent {
     state: boolean = false
     updater: Automation
 
-    turnedOn: Trigger = { topic: "", payload: "ON" }
-    turnedOff: Trigger = { topic: "", payload: "OFF" }
+    trigger = {
+        on: { topic: "", payload: "ON" },
+        off: { topic: "", payload: "OFF" }
+    }
+
 
     constructor(name: string, component: string) {
         super(name)
         this.sensorTopic = this.topic + "/switch/" + component + "/state"
         this.commandTopic = this.topic + "/switch/" + component + "/command"
-        this.turnedOff.topic = this.sensorTopic
-        this.turnedOn.topic = this.sensorTopic
+        this.trigger.off.topic = this.sensorTopic
+        this.trigger.on.topic = this.sensorTopic
         this.updater = {
             trigger: { topic: this.topic, payload: "*" }, callback: (message: string) => {
                 this.updateComponent(message)

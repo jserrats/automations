@@ -8,15 +8,18 @@ export class LightESPHome extends ESPHomeComponent {
     state: boolean = false
     updater: Automation
 
-    turnedOn: Trigger = { topic: "", payload: "*OFF*" }
-    turnedOff: Trigger = { topic: "", payload: "*ON*" }
+    trigger = {
+        on: { topic: "", payload: "*OFF*" },
+        off: { topic: "", payload: "*ON*" }
+    }
+
 
     constructor(name: string, component: string) {
         super(name)
         this.sensorTopic = this.topic + "/light/" + component + "/state"
         this.commandTopic = this.topic + "/light/" + component + "/command"
-        this.turnedOff.topic = this.sensorTopic
-        this.turnedOn.topic = this.sensorTopic
+        this.trigger.on.topic = this.sensorTopic
+        this.trigger.off.topic = this.sensorTopic
         this.updater = {
             trigger: { topic: this.sensorTopic, payload: "*" }, callback: (message: Trigger) => {
                 this.updateComponent(message.payload)
