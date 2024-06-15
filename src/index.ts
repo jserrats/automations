@@ -1,6 +1,6 @@
 
 import { router } from "./router";
-import { zigbee, esphome, Timer, Sun } from "./components"
+import { zigbee, esphome, Timer, Sun, Alarm } from "./components"
 
 console.log("[i] Starting Automations")
 
@@ -9,17 +9,19 @@ var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
 var livingroomSmoothLights = new zigbee.PowerE1603("power4")
 var clock = new esphome.LightESPHome("minimatrix", "clock")
 var livingRoomClockTimer = new Timer()
+var clock = new esphome.LightESPHome("minimatrix", "clock")
+var livingRoomClockTimer = new Timer()
 router.addAutomation({ trigger: livingroomRemote.up, callback: () => { livingroomSmoothLights.toggle() } })
 router.addAutomation({
     trigger: livingroomRemote.down,
     callback: () => {
         clock.off(),
-        livingRoomClockTimer.setTimeout({ hours: 8 },
-            () => { clock.on() },
-            {
-                cancelTrigger: livingroomRemote.down,
-                cancelCallback: () => { clock.on() }
-            })
+            livingRoomClockTimer.setTimeout({ hours: 8 },
+                () => { clock.on() },
+                {
+                    cancelTrigger: livingroomRemote.down,
+                    cancelCallback: () => { clock.on() }
+                })
     }
 })
 
@@ -44,24 +46,24 @@ var shelvesLight = new zigbee.LightZigbee("light3")
 var shelvesLightTimer = new Timer()
 
 router.addAutomation({
-    trigger: studioPresence.turnedOn, callback: () => {
+    trigger: studioPresence.trigger.on, callback: () => {
         studioLight.on()
         deskPower.on()
         shelvesLight.on({ brightness: 180 })
     }
 })
 router.addAutomation({
-    trigger: studioPresence.turnedOff, callback: () => {
+    trigger: studioPresence.trigger.off, callback: () => {
         studioLight.off()
 
         deskTimer.setTimeout({ minutes: 5 }, () => {
             deskPower.off()
             shelvesLight.setBrightness(100)
-        }, { cancelTrigger: studioPresence.turnedOn })
+        }, { cancelTrigger: studioPresence.trigger.on })
 
         shelvesLightTimer.setTimeout({ minutes: 10 }, () => {
             shelvesLight.off()
-        }, { cancelTrigger: studioPresence.turnedOn })
+        }, { cancelTrigger: studioPresence.trigger.on })
     }
 })
 
@@ -198,3 +200,11 @@ router.addAutomation({
 // weather
 
 var sun = new Sun(41.3831173, 2.1640883)
+
+// alarm
+
+var door = new zigbee.ContactSensorZigbee("magnet0", { inverted: true })
+var window1 = new zigbee.ContactSensorZigbee("magnet1")
+var window2 = new zigbee.ContactSensorZigbee("magnet2")
+
+new Alarm("home", [door, window1, window2])
