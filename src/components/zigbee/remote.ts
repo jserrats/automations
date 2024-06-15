@@ -13,6 +13,7 @@ export class RemoteE2002 extends RemoteZigbee {
     trigger = {
         up: { topic: this.actionTopic, payload: "on" },
         down: { topic: this.actionTopic, payload: "off" },
+        holdDown: { topic: this.actionTopic, payload: "brightness_move_down" },
         left: { topic: this.actionTopic, payload: "arrow_left_click" },
         right: { topic: this.actionTopic, payload: "arrow_right_click" },
         all: { topic: this.actionTopic, payload: "*" }

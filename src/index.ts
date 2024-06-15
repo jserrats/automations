@@ -17,7 +17,7 @@ router.addAutomation({
             livingRoomClockTimer.setTimeout({ hours: 8 },
                 () => { clock.on() },
                 {
-                    cancelTrigger: livingroomRemote.trigger.down,
+                    cancelTrigger: livingroomRemote.trigger.holdDown,
                     cancelCallback: () => { clock.on() }
                 })
     }
