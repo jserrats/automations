@@ -4,8 +4,12 @@ import { Trigger } from "../../types"
 export class PresenceSensorZigbee extends ZigbeeComponent {
     occupancy = false
     actionTopic = this.topic + "/action"
-    occupancyTriggered: Trigger = { topic: this.actionTopic, payload: "ON" }
-    occupancyCleared: Trigger = { topic: this.actionTopic, payload: "OFF" }
+    trigger = {
+        occupied: { topic: this.actionTopic, payload: "ON" },
+        cleared: { topic: this.actionTopic, payload: "OFF" },
+        all: { topic: this.actionTopic, payload: "*" }
+    }
+
 
     updateComponent(message: PresenceSensorZigbeeComponentInfo): void {
         if (this.occupancy == !message.occupancy) { this.triggerItself() }
