@@ -7,14 +7,18 @@ export class BinarySensorESPHome extends ESPHomeComponent {
     state: boolean = false
     updater: Automation
 
-    turnedOn: Trigger = { topic: "", payload: "ON" }
-    turnedOff: Trigger = { topic: "", payload: "OFF" }
+    trigger = {
+        on: { topic: "", payload: "ON" },
+        off: { topic: "", payload: "OFF" },
+        all: { topic: "", payload: "*" }
+    }
 
     constructor(name: string, component: string) {
         super(name)
         this.sensorTopic = this.topic + "/binary_sensor/" + component + "/state"
-        this.turnedOff.topic = this.sensorTopic
-        this.turnedOn.topic = this.sensorTopic
+        this.trigger.off.topic = this.sensorTopic
+        this.trigger.on.topic = this.sensorTopic
+        this.trigger.all.topic = this.sensorTopic
         this.updater = {
             trigger: { topic: this.topic, payload: "*" }, callback: (message: Trigger) => {
                 this.updateComponent(message.payload)
@@ -25,5 +29,13 @@ export class BinarySensorESPHome extends ESPHomeComponent {
 
     updateComponent(message: string) {
         this.state = (message == "ON")
+    }
+}
+
+export class ContactSensorESPHome extends BinarySensorESPHome {
+    contact = false
+
+    updateComponent(message: string) {
+        this.contact = (message == "ON")
     }
 }
