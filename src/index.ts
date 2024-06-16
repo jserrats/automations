@@ -1,6 +1,8 @@
 
-import { router } from "./router";
-import { zigbee, esphome, Timer, Sun, Alarm } from "./components"
+
+import 'dotenv/config'
+import { router } from "mqtt-assistant";
+import { zigbee, esphome, Timer, Sun, Alarm, TelegramClient } from "mqtt-assistant"
 
 console.log("[i] Starting Automations")
 
