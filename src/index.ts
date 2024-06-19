@@ -8,7 +8,7 @@ console.log("[i] Starting Automations")
 
 // Living Room
 var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
-var livingroomSmoothLights = new zigbee.PowerE1603("power4")
+var livingroomSmoothLights = new zigbee.PowerE1603("livingroom_smooth_lights")
 var clock = new esphome.LightESPHome("minimatrix", "clock")
 var livingRoomClockTimer = new Timer()
 router.addAutomation({ trigger: livingroomRemote.trigger.up, callback: () => { livingroomSmoothLights.toggle() } })
@@ -26,21 +26,20 @@ router.addAutomation({
 })
 
 // Workshop
-var workshopPower = new zigbee.PowerE1603("power6")
+var workshopPower = new zigbee.PowerE1603("workshop_power")
 var workshopRemote = new zigbee.RemoteE1812("workshop_remote")
 router.addAutomation({ trigger: workshopRemote.trigger.click, callback: () => { workshopPower.toggle() } })
 
 // Laundry room
-var laundrySensor = new zigbee.PresenceSensorZigbee("presence0")
-var laundryLight = new zigbee.LightZigbee("light0")
+var laundrySensor = new zigbee.PresenceSensorZigbee("laundry_presence")
+var laundryLight = new zigbee.LightZigbee("laundry_light")
 router.addAutomation({ trigger: laundrySensor.trigger.occupied, callback: () => { laundryLight.on() } })
 router.addAutomation({ trigger: laundrySensor.trigger.cleared, callback: () => { laundryLight.off() } })
 
 // Studio
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
 var studioLight = new zigbee.LightLED1623G12("studio_light")
-var studioLight = new zigbee.LightLED1623G12("studio_light")
-var deskPower = new zigbee.PowerE1603("power1")
+var deskPower = new zigbee.PowerE1603("desk_power")
 var deskTimer = new Timer()
 var shelvesLight = new zigbee.LightZigbee("light3")
 var shelvesLightTimer = new Timer()
@@ -68,10 +67,10 @@ router.addAutomation({
 })
 
 // Bedroom
-var bedroomRemoteLeft = new zigbee.RemoteTS0044("button4.4")
-var bedroomRemoteRight = new zigbee.RemoteTS0044("button4.2")
+var bedroomRemoteLeft = new zigbee.RemoteTS0044("bedroom_left_remote")
+var bedroomRemoteRight = new zigbee.RemoteTS0044("bedroom_right_remote")
 
-var bedroomFan = new zigbee.PowerE1603("power2")
+var bedroomFan = new zigbee.PowerE1603("bedroom_fan")
 var bedroomFanTimer = new Timer()
 
 // fan control
@@ -104,9 +103,9 @@ router.addAutomation({
 const dayLight = { brightness: 254, colorTemp: 250 }
 const warmLight = { brightness: 5, colorTemp: 450 }
 
-var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_light")
-var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_light2")
-var bedroomRemoteEntrance = new zigbee.RemoteE1812("button1.1")
+var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
+var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
+var bedroomRemoteEntrance = new zigbee.RemoteE1812("bedroom_remote")
 
 router.addAutomation({
     trigger: [
@@ -158,7 +157,7 @@ router.addAutomation({
 
 // mosquito
 
-var mosquitoRepellant = new zigbee.PowerE1603("power3")
+var mosquitoRepellant = new zigbee.PowerE1603("mosquito_power")
 var mosquitoTimer = new Timer()
 
 router.addAutomation({
