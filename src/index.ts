@@ -26,7 +26,7 @@ router.addAutomation({
 })
 
 // Workshop
-var workshopPower = new zigbee.PowerE1603("workshop_power")
+var workshopPower = new zigbee.PowerE1603("workshop_power", { autoOff: { hours: 4 } })
 var workshopRemote = new zigbee.RemoteE1812("workshop_remote")
 router.addAutomation({ trigger: workshopRemote.trigger.click, callback: () => { workshopPower.toggle() } })
 
