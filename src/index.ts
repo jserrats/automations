@@ -207,3 +207,20 @@ var window1 = new zigbee.ContactSensorZigbee("magnet1")
 var window2 = new zigbee.ContactSensorZigbee("magnet2")
 
 new Alarm("home", [door, window1, window2])
+
+// everything off
+router.addAutomation({
+    trigger: bedroomRemoteLeft.trigger.topLeftSingleClick, callback: () => {
+        sandwich.off()
+
+        bedroomLightLeft.off()
+        bedroomLightRight.off()
+
+        deskPower.off()
+        workshopPower.off()
+        shelvesLight.off()
+        studioLight.off()
+
+        livingroomSmoothLights.off()
+    }
+})
