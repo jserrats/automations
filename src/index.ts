@@ -25,6 +25,9 @@ router.addAutomation({
     }
 })
 
+// Lobby
+var lobbyLight = new zigbee.LightLED1623G12("lobby_light")
+
 // Workshop
 var workshopPower = new zigbee.PowerE1603("workshop_power", { autoOff: { hours: 4 } })
 var workshopRemote = new zigbee.RemoteE1812("workshop_remote")
@@ -39,6 +42,7 @@ router.addAutomation({ trigger: laundrySensor.trigger.cleared, callback: () => {
 // Studio
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
 var studioLight = new zigbee.LightLED1623G12("studio_light")
+var studioFan = new zigbee.PowerE1603("studio_fan")
 var deskPower = new zigbee.PowerE1603("desk_power")
 var deskTimer = new Timer()
 var shelvesLight = new zigbee.LightZigbee("light3")
@@ -62,6 +66,7 @@ router.addAutomation({
 
         shelvesLightTimer.setTimeout({ minutes: 10 }, () => {
             shelvesLight.off()
+            studioFan.off()
         }, { cancelTrigger: studioPresence.trigger.on })
     }
 })
@@ -220,6 +225,9 @@ router.addAutomation({
         workshopPower.off()
         shelvesLight.off()
         studioLight.off()
+        studioFan.off()
+
+        lobbyLight.off()
 
         livingroomSmoothLights.off()
     }
