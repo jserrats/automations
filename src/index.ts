@@ -101,7 +101,8 @@ router.addAutomation({
             cancelTrigger: [
                 bedroomRemoteLeft.trigger.bottomLeftHold,
                 bedroomRemoteRight.trigger.bottomLeftHold,
-            ]
+            ],
+            publishTopic: "bedroom_fan"
         })
     }
 })
@@ -174,17 +175,16 @@ router.addAutomation({
         bedroomRemoteRight.trigger.topRightSingleClick,
     ],
     callback: () => {
-        mosquitoRepellant.on()
-        mosquitoTimer.setTimeout({ hours: 8 }, () => {
+        if (mosquitoRepellant.state) {
             mosquitoRepellant.off()
-        }, {
-            cancelTrigger: [
-                bedroomRemoteLeft.trigger.topRightHold,
-                bedroomRemoteRight.trigger.topRightHold
-            ],
-            cancelCallback: () => { mosquitoRepellant.off() },
-            publishTopic: "mosquito"
-        })
+            mosquitoTimer.cancelTimeout()
+        } else {
+            mosquitoTimer.setTimeout({ hours: 8 }, () => {
+                mosquitoRepellant.off()
+            }, {
+                publishTopic: "mosquito"
+            })
+        }
     }
 })
 
