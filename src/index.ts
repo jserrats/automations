@@ -45,7 +45,7 @@ var studioLight = new zigbee.LightLED1623G12("studio_light")
 var studioFan = new zigbee.PowerE1603("studio_fan")
 var deskPower = new zigbee.PowerE1603("desk_power")
 var deskTimer = new Timer()
-var shelvesLight = new zigbee.LightZigbee("light3")
+var shelvesLight = new zigbee.LightZigbee("studio_shelf_light")
 var shelvesLightTimer = new Timer()
 
 router.addAutomation({
@@ -210,9 +210,9 @@ var sun = new Sun(41.3831173, 2.1640883)
 
 // alarm
 
-var door = new zigbee.ContactSensorZigbee("magnet0", { inverted: true })
-var window1 = new zigbee.ContactSensorZigbee("magnet1")
-var window2 = new zigbee.ContactSensorZigbee("magnet2")
+var door = new zigbee.ContactSensorZigbee("door_closure_sensor", { inverted: true })
+var window1 = new zigbee.ContactSensorZigbee("studio_window_closure_sensor")
+var window2 = new zigbee.ContactSensorZigbee("music_window_closure_sensor")
 
 new Alarm("home", [door, window1, window2])
 
