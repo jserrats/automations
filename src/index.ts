@@ -83,7 +83,10 @@ router.addAutomation({
     trigger: [
         bedroomRemoteLeft.trigger.bottomLeftSingleClick,
         bedroomRemoteRight.trigger.bottomLeftSingleClick
-    ], callback: () => { bedroomFan.toggle() }
+    ], callback: () => {
+        bedroomFan.toggle();
+        bedroomFanTimer.cancelTimeout()
+    }
 })
 
 router.addAutomation({
@@ -97,7 +100,7 @@ router.addAutomation({
         }, {
             cancelTrigger: [
                 bedroomRemoteLeft.trigger.bottomLeftHold,
-                bedroomRemoteRight.trigger.bottomLeftHold
+                bedroomRemoteRight.trigger.bottomLeftHold,
             ]
         })
     }
@@ -119,12 +122,12 @@ router.addAutomation({
         bedroomRemoteEntrance.trigger.click
     ],
     callback: () => {
-        if (bedroomLightLeft.state && bedroomLightRight.state) {
-            bedroomLightLeft.off(),
-                bedroomLightRight.off()
+        if (bedroomLightLeft.state || bedroomLightRight.state) {
+            bedroomLightLeft.off();
+            bedroomLightRight.off()
         } else {
-            bedroomLightLeft.on(dayLight),
-                bedroomLightRight.on(dayLight)
+            bedroomLightLeft.on(dayLight);
+            bedroomLightRight.on(dayLight)
         }
     }
 })
