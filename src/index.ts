@@ -179,6 +179,7 @@ router.addAutomation({
             mosquitoRepellant.off()
             mosquitoTimer.cancelTimeout()
         } else {
+            mosquitoRepellant.on()
             mosquitoTimer.setTimeout({ hours: 8 }, () => {
                 mosquitoRepellant.off()
             }, {
