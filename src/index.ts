@@ -2,7 +2,7 @@
 
 import 'dotenv/config'
 import { router } from "mqtt-assistant";
-import { zigbee, esphome, Timer, Sun, Alarm, TelegramClient } from "mqtt-assistant"
+import { zigbee, esphome, Timer, Sun, Alarm, Weather} from "mqtt-assistant"
 
 console.log("[i] Starting Automations")
 
@@ -207,7 +207,8 @@ router.addAutomation({
 
 // weather
 
-var sun = new Sun(41.3831173, 2.1640883)
+new Sun(41.3831173, 2.1640883)
+new Weather(41.3831173, 2.1640883)
 
 // alarm
 
