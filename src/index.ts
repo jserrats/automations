@@ -2,7 +2,7 @@
 
 import 'dotenv/config'
 import { router } from "mqtt-assistant";
-import { zigbee, esphome, Timer, Sun, Alarm, Weather} from "mqtt-assistant"
+import { zigbee, esphome, Timer, Sun, Alarm, Weather } from "mqtt-assistant"
 
 console.log("[i] Starting Automations")
 
@@ -115,6 +115,13 @@ const warmLight = { brightness: 5, colorTemp: 450 }
 var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
 var bedroomRemoteEntrance = new zigbee.RemoteE1812("bedroom_remote")
+var nightStandLight = new esphome.LightESPHome("bedroom", "nightstand_led")
+
+router.addAutomation({
+    trigger: [bedroomRemoteLeft.trigger.topLeftHold, bedroomRemoteRight.trigger.topLeftHold], callback: () => {
+        nightStandLight.off()
+    }
+})
 
 router.addAutomation({
     trigger: [
@@ -196,7 +203,7 @@ var sandwichTimer = new Timer()
 router.addAutomation({
     trigger: sandwich.trigger.on,
     callback: () => {
-        sandwichTimer.setTimeout({ minutes: 8 },
+        sandwichTimer.setTimeout({ minutes: 6 },
             () => { sandwich.off() },
             {
                 publishTopic: "sandwich",
