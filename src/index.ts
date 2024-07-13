@@ -6,6 +6,10 @@ import { zigbee, esphome, Timer, Sun, Alarm, Weather } from "mqtt-assistant"
 
 console.log("[i] Starting Automations")
 
+// Misc
+
+new zigbee.ZigbeeMonitor()
+
 // Living Room
 var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
 var livingroomSmoothLights = new zigbee.PowerE1603("livingroom_smooth_lights")
