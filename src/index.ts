@@ -223,9 +223,9 @@ new Weather(41.3831173, 2.1640883)
 
 // alarm
 
-var door = new zigbee.ContactSensorZigbee("door_closure_sensor", { inverted: true })
-var window1 = new zigbee.ContactSensorZigbee("studio_window_closure_sensor")
-var window2 = new zigbee.ContactSensorZigbee("music_window_closure_sensor")
+var door = new zigbee.ClosureSensorZigbee("door_closure_sensor", { inverted: true })
+var window1 = new zigbee.ClosureSensorZigbee("studio_window_closure_sensor")
+var window2 = new zigbee.ClosureSensorZigbee("music_window_closure_sensor")
 
 new Alarm("home", [door, window1, window2])
 
