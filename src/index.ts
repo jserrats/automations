@@ -8,7 +8,7 @@ console.log("[i] Starting Automations")
 
 // Misc
 
-new zigbee.ZigbeeMonitor()
+new zigbee.ZigbeeMonitor(["music_light"])
 
 // Living Room
 var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
