@@ -50,7 +50,7 @@ var musicRemote = new zigbee.RemoteE2201("music_remote")
 var musicMoodLight = new zigbee.LightLED1623G12("mood_music_light")
 
 router.addAutomation({ trigger: musicRemote.trigger.topClick, callback: () => { musicMoodLight.toggle() } })
-router.addAutomation({ trigger: musicRemote.trigger.bottomClick, callback: () => { musicMoodLight.on(warmLight) } })
+router.addAutomation({ trigger: musicRemote.trigger.bottomClick, callback: () => { musicMoodLight.on(brighterWarmLight) } })
 router.addAutomation({ trigger: musicRemote.trigger.holdBottomClick, callback: () => { musicMoodLight.on(dayLight) } })
 
 // Studio
@@ -125,6 +125,7 @@ router.addAutomation({
 
 const dayLight = { brightness: 254, colorTemp: 250 }
 const warmLight = { brightness: 5, colorTemp: 450 }
+const brighterWarmLight = { brightness: 100, colorTemp: 450 }
 
 var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
