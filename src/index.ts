@@ -5,7 +5,7 @@ import { router } from "mqtt-assistant";
 import { zigbee, esphome, telegram, Timer, Sun, Alarm, Weather } from "mqtt-assistant"
 
 console.log("[i] Starting Automations")
-telegram.info("[i] Starting Automations")
+telegram.info("Starting Automations")
 
 // Misc
 
@@ -43,6 +43,15 @@ var laundrySensor = new zigbee.PresenceSensorZigbee("laundry_presence")
 var laundryLight = new zigbee.LightZigbee("laundry_light")
 router.addAutomation({ trigger: laundrySensor.trigger.occupied, callback: () => { laundryLight.on() } })
 router.addAutomation({ trigger: laundrySensor.trigger.cleared, callback: () => { laundryLight.off() } })
+
+// Music
+
+var musicRemote = new zigbee.RemoteE2201("music_remote")
+var musicMoodLight = new zigbee.LightLED1623G12("mood_music_light")
+
+router.addAutomation({ trigger: musicRemote.trigger.topClick, callback: () => { musicMoodLight.toggle() } })
+router.addAutomation({ trigger: musicRemote.trigger.bottomClick, callback: () => { musicMoodLight.on(warmLight) } })
+router.addAutomation({ trigger: musicRemote.trigger.holdBottomClick, callback: () => { musicMoodLight.on(dayLight) } })
 
 // Studio
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
