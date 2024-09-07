@@ -10,6 +10,7 @@ telegram.info("Starting Automations")
 // Misc
 
 new zigbee.ZigbeeMonitor(["music_light"])
+new esphome.EsphomeMonitor()
 
 // Living Room
 var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
@@ -218,7 +219,7 @@ var sandwichTimer = new Timer()
 router.addAutomation({
     trigger: sandwich.trigger.on,
     callback: () => {
-        sandwichTimer.setTimeout({ minutes: 6 },
+        sandwichTimer.setTimeout({ minutes: 5 },
             () => { sandwich.off() },
             {
                 publishTopic: "sandwich",
