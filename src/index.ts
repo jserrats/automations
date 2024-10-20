@@ -2,7 +2,7 @@
 
 import 'dotenv/config'
 import { router } from "mqtt-assistant";
-import { zigbee, esphome, telegram, Timer, Sun, Alarm, Weather } from "mqtt-assistant"
+import { zigbee, esphome, telegram, Timer, Sun, Alarm, Weather, assistant } from "mqtt-assistant"
 
 console.log("[i] Starting Automations")
 telegram.info("Starting Automations")
@@ -21,12 +21,12 @@ router.addAutomation({ trigger: livingroomRemote.trigger.up, callback: () => { l
 router.addAutomation({
     trigger: livingroomRemote.trigger.down,
     callback: () => {
-        clock.off(),
+        clock.setOff(),
             livingRoomClockTimer.setTimeout({ hours: 8 },
-                () => { clock.on() },
+                () => { clock.setOn() },
                 {
                     cancelTrigger: livingroomRemote.trigger.holdDown,
-                    cancelCallback: () => { clock.on() }
+                    cancelCallback: () => { clock.setOn() }
                 })
     }
 })
@@ -42,8 +42,8 @@ router.addAutomation({ trigger: workshopRemote.trigger.click, callback: () => { 
 // Laundry room
 var laundrySensor = new zigbee.PresenceSensorZigbee("laundry_presence")
 var laundryLight = new zigbee.LightZigbee("laundry_light")
-router.addAutomation({ trigger: laundrySensor.trigger.occupied, callback: () => { laundryLight.on() } })
-router.addAutomation({ trigger: laundrySensor.trigger.cleared, callback: () => { laundryLight.off() } })
+router.addAutomation({ trigger: laundrySensor.trigger.occupied, callback: () => { laundryLight.setOn() } })
+router.addAutomation({ trigger: laundrySensor.trigger.cleared, callback: () => { laundryLight.setOff() } })
 
 // Music
 
@@ -51,8 +51,8 @@ var musicRemote = new zigbee.RemoteE2201("music_remote")
 var musicMoodLight = new zigbee.LightLED1623G12("mood_music_light")
 
 router.addAutomation({ trigger: musicRemote.trigger.topClick, callback: () => { musicMoodLight.toggle() } })
-router.addAutomation({ trigger: musicRemote.trigger.bottomClick, callback: () => { musicMoodLight.on(brighterWarmLight) } })
-router.addAutomation({ trigger: musicRemote.trigger.holdBottomClick, callback: () => { musicMoodLight.on(dayLight) } })
+router.addAutomation({ trigger: musicRemote.trigger.bottomClick, callback: () => { musicMoodLight.setOn(brighterWarmLight) } })
+router.addAutomation({ trigger: musicRemote.trigger.holdBottomClick, callback: () => { musicMoodLight.setOn(dayLight) } })
 
 // Studio
 var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_presence")
@@ -65,23 +65,23 @@ var shelvesLightTimer = new Timer()
 
 router.addAutomation({
     trigger: studioPresence.trigger.on, callback: () => {
-        studioLight.on()
-        deskPower.on()
-        shelvesLight.on({ brightness: 180 })
+        studioLight.setOn()
+        deskPower.setOn()
+        shelvesLight.setOn({ brightness: 180 })
     }
 })
 router.addAutomation({
     trigger: studioPresence.trigger.off, callback: () => {
-        studioLight.off()
+        studioLight.setOff()
 
         deskTimer.setTimeout({ minutes: 5 }, () => {
-            deskPower.off()
+            deskPower.setOff()
             shelvesLight.setBrightness(100)
         }, { cancelTrigger: studioPresence.trigger.on })
 
         shelvesLightTimer.setTimeout({ minutes: 10 }, () => {
-            shelvesLight.off()
-            studioFan.off()
+            shelvesLight.setOff()
+            studioFan.setOff()
         }, { cancelTrigger: studioPresence.trigger.on })
     }
 })
@@ -109,9 +109,9 @@ router.addAutomation({
         bedroomRemoteLeft.trigger.bottomLeftDoubleClick,
         bedroomRemoteRight.trigger.bottomLeftDoubleClick
     ], callback: () => {
-        bedroomFan.on()
+        bedroomFan.setOn()
         bedroomFanTimer.setTimeout({ minutes: 30 }, () => {
-            bedroomFan.off()
+            bedroomFan.setOff()
         }, {
             cancelTrigger: [
                 bedroomRemoteLeft.trigger.bottomLeftHold,
@@ -135,7 +135,7 @@ var nightStandLight = new esphome.LightESPHome("bedroom", "nightstand_led")
 
 router.addAutomation({
     trigger: [bedroomRemoteLeft.trigger.topLeftHold, bedroomRemoteRight.trigger.topLeftHold], callback: () => {
-        nightStandLight.off()
+        nightStandLight.setOff()
     }
 })
 
@@ -147,11 +147,11 @@ router.addAutomation({
     ],
     callback: () => {
         if (bedroomLightLeft.state || bedroomLightRight.state) {
-            bedroomLightLeft.off();
-            bedroomLightRight.off()
+            bedroomLightLeft.setOff();
+            bedroomLightRight.setOff()
         } else {
-            bedroomLightLeft.on(dayLight);
-            bedroomLightRight.on(dayLight)
+            bedroomLightLeft.setOn(dayLight);
+            bedroomLightRight.setOn(dayLight)
         }
     }
 })
@@ -162,8 +162,8 @@ router.addAutomation({
         bedroomRemoteRight.trigger.bottomRightDoubleClick,
     ],
     callback: () => {
-        bedroomLightLeft.on(warmLight),
-            bedroomLightRight.on(warmLight)
+        bedroomLightLeft.setOn(warmLight),
+            bedroomLightRight.setOn(warmLight)
     }
 })
 
@@ -172,8 +172,8 @@ router.addAutomation({
         bedroomRemoteRight.trigger.bottomRightHold,
     ],
     callback: () => {
-        bedroomLightLeft.off()
-        bedroomLightRight.on(warmLight)
+        bedroomLightLeft.setOff()
+        bedroomLightRight.setOn(warmLight)
     }
 })
 
@@ -182,8 +182,8 @@ router.addAutomation({
         bedroomRemoteLeft.trigger.bottomRightHold,
     ],
     callback: () => {
-        bedroomLightRight.off()
-        bedroomLightLeft.on(warmLight)
+        bedroomLightRight.setOff()
+        bedroomLightLeft.setOn(warmLight)
     }
 })
 
@@ -199,12 +199,12 @@ router.addAutomation({
     ],
     callback: () => {
         if (mosquitoRepellant.state) {
-            mosquitoRepellant.off()
+            mosquitoRepellant.setOff()
             mosquitoTimer.cancelTimeout()
         } else {
-            mosquitoRepellant.on()
+            mosquitoRepellant.setOn()
             mosquitoTimer.setTimeout({ hours: 8 }, () => {
-                mosquitoRepellant.off()
+                mosquitoRepellant.setOff()
             }, {
                 publishTopic: "mosquito"
             })
@@ -215,12 +215,18 @@ router.addAutomation({
 // Kitchen
 var sandwich = new esphome.SwitchESPHome("sandwich", "sandwich")
 var sandwichTimer = new Timer()
+const airfryer_power = new zigbee.PowerSensorZigbee("airfryer_power")
+const airfryer_binary = new assistant.CustomBinarySensor<number>("airfryer_binary", (value: number) => {
+    return (value > 10)
+})
+
+airfryer_power.on('state', (value: number) => { airfryer_binary.updateComponent(value) })
 
 router.addAutomation({
     trigger: sandwich.trigger.on,
     callback: () => {
         sandwichTimer.setTimeout({ minutes: 5 },
-            () => { sandwich.off() },
+            () => { sandwich.setOff() },
             {
                 publishTopic: "sandwich",
                 cancelTrigger: sandwich.trigger.off
@@ -244,19 +250,19 @@ new Alarm("home", [door, window1, window2])
 // everything off
 router.addAutomation({
     trigger: bedroomRemoteLeft.trigger.topLeftSingleClick, callback: () => {
-        sandwich.off()
+        sandwich.setOff()
 
-        bedroomLightLeft.off()
-        bedroomLightRight.off()
+        bedroomLightLeft.setOff()
+        bedroomLightRight.setOff()
 
-        deskPower.off()
-        workshopPower.off()
-        shelvesLight.off()
-        studioLight.off()
-        studioFan.off()
+        deskPower.setOff()
+        workshopPower.setOff()
+        shelvesLight.setOff()
+        studioLight.setOff()
+        studioFan.setOff()
 
-        lobbyLight.off()
+        lobbyLight.setOff()
 
-        livingroomSmoothLights.off()
+        livingroomSmoothLights.setOff()
     }
 })
