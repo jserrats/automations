@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-run": "tsc && node dist/src/index.js",
+    "debug": "tsc && node dist/src/test.js",
     "build": "tsc"
   },
   "author": "jserrats.xyz",
