@@ -3,6 +3,7 @@
 import 'dotenv/config'
 import { router } from "mqtt-assistant";
 import { zigbee, esphome, telegram, Timer, Sun, Alarm, Weather, assistant } from "mqtt-assistant"
+import { TemperatureLightOptions } from 'mqtt-assistant/dist/components/zigbee/light';
 
 console.log("[i] Starting Automations")
 telegram.info("Starting Automations")
@@ -124,9 +125,9 @@ router.addAutomation({
 
 // lights
 
-const dayLight = { brightness: 254, colorTemp: 250 }
-const warmLight = { brightness: 5, colorTemp: 450 }
-const brighterWarmLight = { brightness: 218, colorTemp: 450 }
+const dayLight = { brightness: 254, color_temp: 250 } as TemperatureLightOptions
+const warmLight = { brightness: 5, color_temp: 450 } as TemperatureLightOptions
+const brighterWarmLight = { brightness: 218, color_temp: 450 } as TemperatureLightOptions
 
 var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
