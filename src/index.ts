@@ -126,7 +126,7 @@ router.addAutomation({
 
 const dayLight = { brightness: 254, colorTemp: 250 }
 const warmLight = { brightness: 5, colorTemp: 450 }
-const brighterWarmLight = { brightness: 100, colorTemp: 450 }
+const brighterWarmLight = { brightness: 218, colorTemp: 450 }
 
 var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
