@@ -164,7 +164,13 @@ router.addAutomation({
         bedroomRemoteRight.trigger.topLeftSingleClick,
     ],
     callback: () => {
-        bedroomMoodLight.toggle()
+        if (bedroomMoodLight.state) {
+            bedroomMoodLight.setOff()
+        } else {
+            bedroomMoodLight.setOn()
+            bedroomLightRight.setOff()
+            bedroomLightLeft.setOff()
+        }
     }
 })
 
