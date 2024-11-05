@@ -131,6 +131,7 @@ const brighterWarmLight = { brightness: 218, color_temp: 450 } as TemperatureLig
 
 var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
+var bedroomMoodLight = new zigbee.PowerZigbee("bedroom_right_light")
 var bedroomRemoteEntrance = new zigbee.RemoteE1812("bedroom_remote")
 var nightStandLight = new esphome.LightESPHome("bedroom", "nightstand_led")
 
@@ -154,6 +155,16 @@ router.addAutomation({
             bedroomLightLeft.setOn(dayLight);
             bedroomLightRight.setOn(dayLight)
         }
+    }
+})
+
+router.addAutomation({
+    trigger: [
+        bedroomRemoteLeft.trigger.topLeftSingleClick,
+        bedroomRemoteRight.trigger.topLeftSingleClick,
+    ],
+    callback: () => {
+        bedroomMoodLight.toggle()
     }
 })
 
@@ -247,23 +258,3 @@ var window1 = new zigbee.ClosureSensorZigbee("studio_window_closure_sensor")
 var window2 = new zigbee.ClosureSensorZigbee("music_window_closure_sensor")
 
 new Alarm("home", [door, window1, window2])
-
-// everything off
-router.addAutomation({
-    trigger: bedroomRemoteLeft.trigger.topLeftSingleClick, callback: () => {
-        sandwich.setOff()
-
-        bedroomLightLeft.setOff()
-        bedroomLightRight.setOff()
-
-        deskPower.setOff()
-        workshopPower.setOff()
-        shelvesLight.setOff()
-        studioLight.setOff()
-        studioFan.setOff()
-
-        lobbyLight.setOff()
-
-        livingroomSmoothLights.setOff()
-    }
-})
