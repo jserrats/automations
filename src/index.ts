@@ -131,7 +131,7 @@ const brighterWarmLight = { brightness: 218, color_temp: 450 } as TemperatureLig
 
 var bedroomLightLeft = new zigbee.LightLED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.LightLED1623G12("bedroom_right_light")
-var bedroomMoodLight = new zigbee.PowerZigbee("bedroom_right_light")
+var bedroomMoodLight = new zigbee.PowerZigbee("bedroom_mood_light")
 var bedroomRemoteEntrance = new zigbee.RemoteE1812("bedroom_remote")
 var nightStandLight = new esphome.LightESPHome("bedroom", "nightstand_led")
 
