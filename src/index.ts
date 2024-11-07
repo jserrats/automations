@@ -17,18 +17,16 @@ new esphome.EsphomeMonitor()
 var livingroomRemote = new zigbee.RemoteE2002("livingroom_remote")
 var livingroomSmoothLights = new zigbee.PowerE1603("livingroom_smooth_lights")
 var clock = new esphome.LightESPHome("minimatrix", "clock")
-var livingRoomClockTimer = new Timer()
+var livingRoomClockTimer = new Timer({ hours: 8 })
+livingRoomClockTimer.on('timeout', () => { clock.setOn() })
+livingRoomClockTimer.addCancelTriggers(livingroomRemote.trigger.holdDown)
+livingRoomClockTimer.on('cancel', () => { clock.setOn() })
 router.addAutomation({ trigger: livingroomRemote.trigger.up, callback: () => { livingroomSmoothLights.toggle() } })
 router.addAutomation({
     trigger: livingroomRemote.trigger.down,
     callback: () => {
-        clock.setOff(),
-            livingRoomClockTimer.setTimeout({ hours: 8 },
-                () => { clock.setOn() },
-                {
-                    cancelTrigger: livingroomRemote.trigger.holdDown,
-                    cancelCallback: () => { clock.setOn() }
-                })
+        clock.setOff()
+        livingRoomClockTimer.start()
     }
 })
 
@@ -36,7 +34,7 @@ router.addAutomation({
 var lobbyLight = new zigbee.LightLED1623G12("lobby_light")
 
 // Workshop
-var workshopPower = new zigbee.PowerE1603("workshop_power", { autoOff: { hours: 4 } })
+var workshopPower = new zigbee.PowerE1603("workshop_power") // TODO: { autoOff: { hours: 4 } })
 var workshopRemote = new zigbee.RemoteE1812("workshop_remote")
 router.addAutomation({ trigger: workshopRemote.trigger.click, callback: () => { workshopPower.toggle() } })
 
@@ -60,9 +58,21 @@ var studioPresence = new esphome.BinarySensorESPHome("datacenter", "studio_prese
 var studioLight = new zigbee.LightLED1623G12("studio_light")
 var studioFan = new zigbee.PowerE1603("studio_fan")
 var deskPower = new zigbee.PowerE1603("desk_power")
-var deskTimer = new Timer()
 var shelvesLight = new zigbee.LightZigbee("studio_shelf_light")
-var shelvesLightTimer = new Timer()
+
+var deskTimer = new Timer({ minutes: 5 })
+deskTimer.on('timeout', () => {
+    deskPower.setOff()
+    shelvesLight.setBrightness(100)
+})
+deskTimer.addCancelTriggers(studioPresence.trigger.on)
+
+var shelvesLightTimer = new Timer({ minutes: 10 })
+shelvesLightTimer.on('timeout', () => {
+    shelvesLight.setOff()
+    studioFan.setOff()
+})
+shelvesLightTimer.addCancelTriggers(studioPresence.trigger.on)
 
 router.addAutomation({
     trigger: studioPresence.trigger.on, callback: () => {
@@ -74,16 +84,8 @@ router.addAutomation({
 router.addAutomation({
     trigger: studioPresence.trigger.off, callback: () => {
         studioLight.setOff()
-
-        deskTimer.setTimeout({ minutes: 5 }, () => {
-            deskPower.setOff()
-            shelvesLight.setBrightness(100)
-        }, { cancelTrigger: studioPresence.trigger.on })
-
-        shelvesLightTimer.setTimeout({ minutes: 10 }, () => {
-            shelvesLight.setOff()
-            studioFan.setOff()
-        }, { cancelTrigger: studioPresence.trigger.on })
+        deskTimer.start()
+        shelvesLightTimer.start()
     }
 })
 
@@ -92,7 +94,14 @@ var bedroomRemoteLeft = new zigbee.RemoteTS0044("bedroom_left_remote")
 var bedroomRemoteRight = new zigbee.RemoteTS0044("bedroom_right_remote")
 
 var bedroomFan = new zigbee.PowerE1603("bedroom_fan")
-var bedroomFanTimer = new Timer()
+var bedroomFanTimer = new Timer({ minutes: 30 }, "bedroom_fan")
+bedroomFanTimer.on('timeout', () => {
+    bedroomFan.setOff()
+})
+bedroomFanTimer.addCancelTriggers([
+    bedroomRemoteLeft.trigger.bottomLeftHold,
+    bedroomRemoteRight.trigger.bottomLeftHold,
+])
 
 // fan control
 router.addAutomation({
@@ -101,7 +110,7 @@ router.addAutomation({
         bedroomRemoteRight.trigger.bottomLeftSingleClick
     ], callback: () => {
         bedroomFan.toggle();
-        bedroomFanTimer.cancelTimeout()
+        bedroomFanTimer.cancel()
     }
 })
 
@@ -111,15 +120,7 @@ router.addAutomation({
         bedroomRemoteRight.trigger.bottomLeftDoubleClick
     ], callback: () => {
         bedroomFan.setOn()
-        bedroomFanTimer.setTimeout({ minutes: 30 }, () => {
-            bedroomFan.setOff()
-        }, {
-            cancelTrigger: [
-                bedroomRemoteLeft.trigger.bottomLeftHold,
-                bedroomRemoteRight.trigger.bottomLeftHold,
-            ],
-            publishTopic: "bedroom_fan"
-        })
+        bedroomFanTimer.start()
     }
 })
 
@@ -208,8 +209,8 @@ router.addAutomation({
 // mosquito
 
 var mosquitoRepellant = new zigbee.PowerE1603("mosquito_power")
-var mosquitoTimer = new Timer()
-
+var mosquitoTimer = new Timer({ hours: 8 }, "mosquito")
+mosquitoTimer.on('timeout', () => { mosquitoRepellant.setOff() })
 router.addAutomation({
     trigger: [
         bedroomRemoteLeft.trigger.topRightSingleClick,
@@ -218,21 +219,19 @@ router.addAutomation({
     callback: () => {
         if (mosquitoRepellant.state) {
             mosquitoRepellant.setOff()
-            mosquitoTimer.cancelTimeout()
+            mosquitoTimer.cancel()
         } else {
             mosquitoRepellant.setOn()
-            mosquitoTimer.setTimeout({ hours: 8 }, () => {
-                mosquitoRepellant.setOff()
-            }, {
-                publishTopic: "mosquito"
-            })
+            mosquitoTimer.start()
         }
     }
 })
 
 // Kitchen
 var sandwich = new esphome.SwitchESPHome("sandwich", "sandwich")
-var sandwichTimer = new Timer()
+var sandwichTimer = new Timer({ minutes: 5 }, "sandwich")
+sandwichTimer.on('timeout', () => { sandwich.setOff() })
+sandwichTimer.addCancelTriggers(sandwich.trigger.off)
 const airfryer_power = new zigbee.PowerSensorZigbee("airfryer_power")
 const airfryer_binary = new assistant.CustomBinarySensor<number>("airfryer_binary", (value: number) => {
     return (value > 10)
@@ -243,12 +242,7 @@ airfryer_power.on('state', (value: number) => { airfryer_binary.updateComponent(
 router.addAutomation({
     trigger: sandwich.trigger.on,
     callback: () => {
-        sandwichTimer.setTimeout({ minutes: 5 },
-            () => { sandwich.setOff() },
-            {
-                publishTopic: "sandwich",
-                cancelTrigger: sandwich.trigger.off
-            })
+        sandwichTimer.start()
     }
 })
 
