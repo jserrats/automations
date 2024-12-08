@@ -55,6 +55,8 @@ var studioLight = new zigbee.lights.LED1623G12("studio_light")
 var studioFan = new zigbee.switches.E1603("studio_fan")
 var deskPower = new zigbee.switches.E1603("desk_power")
 var shelvesLight = new zigbee.lights.YSR_MINI_01_dimmer("studio_shelf_light")
+var bluetooth = new zigbee.switches.XMSJ("bluetooth_audio_input")
+var charger = new zigbee.switches.XMSJ("wireless_charger")
 
 var deskTimer = new Timer({ minutes: 10 })
 
@@ -81,6 +83,7 @@ studioPresence.on(studioPresence.events.state, (state) => {
         studioLight.setOff()
         deskTimer.start()
         shelvesLightTimer.start()
+        bluetooth.setOff()
     }
 })
 
@@ -225,7 +228,7 @@ new Sun(41.3831173, 2.1640883)
 
 // // alarm
 
-var door = new zigbee.sensors.closure.TS0203("door_closure_sensor", { inverted: true })
+var door = new zigbee.sensors.closure.TS0203("door_closure_sensor", true)
 var window1 = new zigbee.sensors.closure.TS0203("studio_window_closure_sensor")
 var window2 = new zigbee.sensors.closure.TS0203("music_window_closure_sensor")
 
