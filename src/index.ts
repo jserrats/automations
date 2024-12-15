@@ -147,9 +147,10 @@ globalEventManager.on(
         bedroomRemoteEntrance.button.click
     ],
     () => {
-        if (bedroomLightLeft.state || bedroomLightRight.state) {
+        if (bedroomLightLeft.state || bedroomLightRight.state || bedroomMoodLight.state) {
             bedroomLightLeft.setOff(),
-                bedroomLightRight.setOff()
+                bedroomLightRight.setOff(),
+                bedroomMoodLight.setOff()
         } else {
             bedroomLightLeft.setOn(dayLight),
                 bedroomLightRight.setOn(dayLight)
