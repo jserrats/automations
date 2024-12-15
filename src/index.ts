@@ -57,6 +57,7 @@ var deskPower = new zigbee.switches.E1603("desk_power")
 var shelvesLight = new zigbee.lights.YSR_MINI_01_dimmer("studio_shelf_light")
 var bluetooth = new zigbee.switches.XMSJ("bluetooth_audio_input")
 var charger = new zigbee.switches.XMSJ("wireless_charger")
+charger.on(charger.newTimeStateEvent({ hours: 4 }, (state) => { return state }), () => { charger.setOff() })
 
 var deskTimer = new Timer({ minutes: 10 })
 
