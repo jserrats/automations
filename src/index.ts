@@ -63,6 +63,7 @@ var deskTimer = new Timer({ minutes: 10 })
 
 deskTimer.on(deskTimer.events.timeout, () => {
     deskPower.setOff()
+    bluetooth.setOff()
     shelvesLight.brightness.set(100)
 })
 
@@ -84,7 +85,6 @@ studioPresence.on(studioPresence.events.state, (state) => {
         studioLight.setOff()
         deskTimer.start()
         shelvesLightTimer.start()
-        bluetooth.setOff()
     }
 })
 
