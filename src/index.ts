@@ -40,7 +40,6 @@ var laundryLight = new zigbee.lights.LED1623G12("laundry_light")
 laundrySensor.occupancy.on(laundrySensor.occupancy.events.state, (state) => { if (state) { laundryLight.setOn() } else { laundryLight.setOff() } })
 
 // Music
-
 var musicRemote = new zigbee.remotes.RemoteE2201("music_remote")
 var musicMoodLight = new zigbee.lights.LED1623G12("mood_music_light")
 
@@ -55,6 +54,7 @@ var studioLight = new zigbee.lights.LED1623G12("studio_light")
 var studioFan = new zigbee.switches.E1603("studio_fan")
 var deskPower = new zigbee.switches.E1603("desk_power")
 var shelvesLight = new zigbee.lights.YSR_MINI_01_dimmer("studio_shelf_light")
+var deskBacklight = new zigbee.lights.GL_C_006P("desktop_backlighting")
 var bluetooth = new zigbee.switches.XMSJ("bluetooth_audio_input")
 var charger = new zigbee.switches.XMSJ("wireless_charger")
 charger.on(charger.newTimeStateEvent({ hours: 4 }, (state) => { return state }), () => { charger.setOff() })
@@ -72,6 +72,7 @@ var shelvesLightTimer = new Timer({ minutes: 20 })
 shelvesLightTimer.on(shelvesLightTimer.events.timeout, () => {
     shelvesLight.setOff()
     studioFan.setOff()
+    deskBacklight.setOff()
 })
 
 studioPresence.on(studioPresence.events.state, (state) => {
@@ -81,6 +82,7 @@ studioPresence.on(studioPresence.events.state, (state) => {
         studioLight.setOn()
         deskPower.setOn()
         shelvesLight.setOn({ brightness: 180 })
+        deskBacklight.setOn()
     } else {
         studioLight.setOff()
         deskTimer.start()
