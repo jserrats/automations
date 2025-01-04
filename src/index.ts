@@ -10,7 +10,7 @@ telegram.info("Starting Automations")
 // // Misc
 
 new zigbee.ZigbeeMonitor()
-new esphome.EsphomeMonitor()
+new esphome.MonitorESPHome()
 
 // // Living Room
 var livingroomRemote = new zigbee.remotes.RemoteE2002("livingroom_remote")
@@ -134,7 +134,7 @@ const brighterWarmLight = { brightness: 218, color_temp: 450 }
 var bedroomLightLeft = new zigbee.lights.LED1623G12("bedroom_left_light")
 var bedroomLightRight = new zigbee.lights.LED1623G12("bedroom_right_light")
 var bedroomMoodLight = new zigbee.switches.E1603("bedroom_mood_light")
-var bedroomRemoteEntrance = new zigbee.remotes.RemoteE1812("bedroom_remote")
+var bedroomRemoteEntrance = new zigbee.remotes.RemoteE2201("bedroom_remote")
 var nightStandLight = new esphome.LightESPHome("bedroom", "nightstand_led")
 
 globalEventManager.on(
@@ -147,7 +147,7 @@ globalEventManager.on(
     [
         bedroomRemoteRight.button.bottomRightSingleClick,
         bedroomRemoteLeft.button.bottomRightSingleClick,
-        bedroomRemoteEntrance.button.click
+        bedroomRemoteEntrance.button.topClick
     ],
     () => {
         if (bedroomLightLeft.state || bedroomLightRight.state || bedroomMoodLight.state) {
@@ -163,7 +163,8 @@ globalEventManager.on(
 globalEventManager.on(
     [
         bedroomRemoteRight.button.topLeftSingleClick,
-        bedroomRemoteLeft.button.topLeftSingleClick
+        bedroomRemoteLeft.button.topLeftSingleClick,
+        bedroomRemoteEntrance.button.bottomClick
     ],
     () => {
         if (bedroomMoodLight.state) {

@@ -7,7 +7,7 @@ COPY --chown=node:node src/ ./src
 
 RUN npm install && npm run build
 
-FROM node:20 as production
+FROM node:20 AS production
 
 USER node
 WORKDIR /usr/src/app
