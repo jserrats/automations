@@ -83,7 +83,7 @@ studioPresence.on(studioPresence.events.state, (state) => {
         deskPower.setOn()
         shelvesLight.setOn({ brightness: 180 })
         deskBacklight.setOn()
-    } else {
+    } else if (state === false) { // if new state is undefined do nothing
         studioLight.setOff()
         deskTimer.start()
         shelvesLightTimer.start()
